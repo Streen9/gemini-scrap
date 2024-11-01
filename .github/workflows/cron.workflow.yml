@@ -40,4 +40,7 @@ jobs:
         shell: bash  # Use 'bash' as the shell
 
       - name: Run index.js
-        run: node index.js  # Execute the index.js file
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          HEADLESS: ${{ secrets.HEADLESS }}
+        run: node index.js

@@ -3,7 +3,7 @@ const fs = require('fs');
 const geminiGenerate = require('./gemini').geminiGenerate;
 (async () => {
     // Launch the browser (visible window mode)
-    const browser = await playwright.chromium.launch({ headless: false });
+    const browser = await playwright.chromium.launch({ headless: process.env.HEADLESS !== 'false' });
     const page = await browser.newPage();
 
     // Go to BookMyShow website

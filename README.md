@@ -213,3 +213,4 @@ For support, please:
 - [ ] Create a CLI interface
 - [ ] Add more scrapers
 - [ ] Implement data export formats (CSV, Excel, JSON)
+- [ ] Complete the test suite with unit and integration tests

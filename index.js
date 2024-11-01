@@ -4,16 +4,17 @@ const { SCRAPER_TYPES } = require('./constants');
 
 class ScraperManager {
     constructor() {
-        this.scrapers = new Map([
-            [SCRAPER_TYPES.BOOKMYSHOW, BookMyShowScraper]
-        ]);
+        // Initialize the scrapers map
+        this.scrapers = {
+            [SCRAPER_TYPES.bookmyshow]: BookMyShowScraper
+        };
     }
 
     async runScraper(type, options = {}) {
         try {
             logger.info('Starting scraper', { type, options });
 
-            const ScraperClass = this.scrapers.get(type);
+            const ScraperClass = this.scrapers[type];
             if (!ScraperClass) {
                 throw new Error(`Unsupported scraper type: ${type}`);
             }
@@ -25,20 +26,10 @@ class ScraperManager {
             return result;
 
         } catch (error) {
-            logger.error('Scraper failed', { type, error });
+            logger.error('Scraper failed', { error, type });
             throw error;
         }
     }
-}
-
-// Example usage
-if (require.main === module) {
-    const manager = new ScraperManager();
-    manager.runScraper(SCRAPER_TYPES.BOOKMYSHOW, { location: 'vizianagaram' })
-        .catch(error => {
-            logger.error('Failed to run scraper', { error });
-            process.exit(1);
-        });
 }
 
 module.exports = new ScraperManager();

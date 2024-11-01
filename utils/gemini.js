@@ -9,7 +9,6 @@ class GeminiService {
 
     validateConfig() {
         if (!process.env.API_KEY) {
-            console.log(process.env)
             const error = new Error('Gemini API key is not configured');
             logger.error('Missing API key configuration', { error });
             throw error;
@@ -31,12 +30,18 @@ class GeminiService {
                 ...this.config,
             });
 
-            logger.info('Gemini service initialized successfully', {
+            logger.info('Gemini service initialized', {
                 model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
                 config: this.config
             });
         } catch (error) {
-            logger.error('Failed to initialize Gemini service', { error });
+            logger.error('Gemini initialization failed', {
+                error: {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                }
+            });
             throw error;
         }
     }
@@ -48,45 +53,74 @@ class GeminiService {
             throw error;
         }
 
+        // Validate prompt length
+        if (prompt.length > 1000000) {
+            const error = new Error('Prompt too long');
+            logger.error('Prompt exceeds maximum length', {
+                promptLength: prompt.length
+            });
+            throw error;
+        }
+
         let lastError;
         for (let attempt = 1; attempt <= retryCount; attempt++) {
             try {
-                logger.info('Generating content with Gemini', { 
+                logger.info('Generating content with Gemini', {
                     promptLength: prompt.length,
-                    attempt 
+                    attempt
                 });
 
                 const result = await this.model.generateContent(prompt);
+
+                if (!result || !result.response) {
+                    throw new Error('Invalid response from Gemini API');
+                }
+
                 const response = result.response;
                 const text = response.text();
 
-                logger.info('Successfully generated content', { 
+                if (!text) {
+                    throw new Error('Empty response from Gemini API');
+                }
+
+                logger.info('Successfully generated content', {
                     responseLength: text.length,
-                    attempt 
+                    attempt
                 });
+
+                // Verify the response looks like JSON
+                if (prompt.includes('fetch') && !text.includes('{')) {
+                    throw new Error('Response does not appear to be JSON formatted');
+                }
 
                 return text;
 
             } catch (error) {
                 lastError = error;
-                logger.warn('Failed to generate content', { 
-                    error,
+                logger.warn('Failed to generate content', {
+                    error: {
+                        name: error.name,
+                        message: error.message,
+                        stack: error.stack
+                    },
                     attempt,
-                    remainingAttempts: retryCount - attempt 
+                    remainingAttempts: retryCount - attempt
                 });
 
-                // If this is not the last attempt, wait before retrying
                 if (attempt < retryCount) {
-                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 8000); // Exponential backoff
+                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 8000);
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
         }
 
-        // If we've exhausted all retries, log and throw the error
-        logger.error('Failed to generate content after all retry attempts', { 
-            error: lastError,
-            totalAttempts: retryCount 
+        logger.error('All Gemini generation attempts failed', {
+            error: {
+                name: lastError.name,
+                message: lastError.message,
+                stack: lastError.stack
+            },
+            totalAttempts: retryCount
         });
         throw lastError;
     }
@@ -97,5 +131,5 @@ const geminiService = new GeminiService();
 
 module.exports = {
     geminiGenerate: (prompt) => geminiService.generateContent(prompt),
-    geminiService, // Export the service instance for direct access if needed
+    geminiService
 };

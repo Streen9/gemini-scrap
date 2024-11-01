@@ -8,20 +8,16 @@ class GeminiService {
     }
 
     validateConfig() {
-        // Check for different possible API key environment variable names
-        const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-        if (!apiKey) {
+        if (!process.env.API_KEY) {
             const error = new Error('Gemini API key is not configured');
-            logger.error('Missing API key configuration. Please ensure API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY is set in your environment variables', { error });
+            logger.error('Missing API key configuration', { error });
             throw error;
         }
-        // Store the found API key
-        this.apiKey = apiKey;
     }
 
     initialize() {
         try {
-            this.googleAI = new GoogleGenerativeAI(this.apiKey);
+            this.googleAI = new GoogleGenerativeAI(process.env.API_KEY);
             this.config = {
                 temperature: parseFloat(process.env.GEMINI_TEMPERATURE || '0.9'),
                 topP: parseInt(process.env.GEMINI_TOP_P || '1'),
@@ -34,12 +30,18 @@ class GeminiService {
                 ...this.config,
             });
 
-            logger.info('Gemini service initialized successfully', {
+            logger.info('Gemini service initialized', {
                 model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
                 config: this.config
             });
         } catch (error) {
-            logger.error('Failed to initialize Gemini service', { error });
+            logger.error('Gemini initialization failed', {
+                error: {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                }
+            });
             throw error;
         }
     }
@@ -48,6 +50,15 @@ class GeminiService {
         if (!prompt) {
             const error = new Error('Prompt is required');
             logger.error('Empty prompt provided', { error });
+            throw error;
+        }
+
+        // Validate prompt length
+        if (prompt.length > 1000000) {
+            const error = new Error('Prompt too long');
+            logger.error('Prompt exceeds maximum length', {
+                promptLength: prompt.length
+            });
             throw error;
         }
 
@@ -60,35 +71,55 @@ class GeminiService {
                 });
 
                 const result = await this.model.generateContent(prompt);
+
+                if (!result || !result.response) {
+                    throw new Error('Invalid response from Gemini API');
+                }
+
                 const response = result.response;
                 const text = response.text();
+
+                if (!text) {
+                    throw new Error('Empty response from Gemini API');
+                }
 
                 logger.info('Successfully generated content', {
                     responseLength: text.length,
                     attempt
                 });
 
+                // Verify the response looks like JSON
+                if (prompt.includes('fetch') && !text.includes('{')) {
+                    throw new Error('Response does not appear to be JSON formatted');
+                }
+
                 return text;
 
             } catch (error) {
                 lastError = error;
                 logger.warn('Failed to generate content', {
-                    error,
+                    error: {
+                        name: error.name,
+                        message: error.message,
+                        stack: error.stack
+                    },
                     attempt,
                     remainingAttempts: retryCount - attempt
                 });
 
-                // If this is not the last attempt, wait before retrying
                 if (attempt < retryCount) {
-                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 8000); // Exponential backoff
+                    const delay = Math.min(1000 * Math.pow(2, attempt - 1), 8000);
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
         }
 
-        // If we've exhausted all retries, log and throw the error
-        logger.error('Failed to generate content after all retry attempts', {
-            error: lastError,
+        logger.error('All Gemini generation attempts failed', {
+            error: {
+                name: lastError.name,
+                message: lastError.message,
+                stack: lastError.stack
+            },
             totalAttempts: retryCount
         });
         throw lastError;
@@ -100,5 +131,5 @@ const geminiService = new GeminiService();
 
 module.exports = {
     geminiGenerate: (prompt) => geminiService.generateContent(prompt),
-    geminiService, // Export the service instance for direct access if needed
+    geminiService
 };

@@ -8,17 +8,20 @@ class GeminiService {
     }
 
     validateConfig() {
-        if (!process.env.API_KEY) {
-            console.log(process.env)
+        // Check for different possible API key environment variable names
+        const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+        if (!apiKey) {
             const error = new Error('Gemini API key is not configured');
-            logger.error('Missing API key configuration', { error });
+            logger.error('Missing API key configuration. Please ensure API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY is set in your environment variables', { error });
             throw error;
         }
+        // Store the found API key
+        this.apiKey = apiKey;
     }
 
     initialize() {
         try {
-            this.googleAI = new GoogleGenerativeAI(process.env.API_KEY);
+            this.googleAI = new GoogleGenerativeAI(this.apiKey);
             this.config = {
                 temperature: parseFloat(process.env.GEMINI_TEMPERATURE || '0.9'),
                 topP: parseInt(process.env.GEMINI_TOP_P || '1'),
@@ -51,28 +54,28 @@ class GeminiService {
         let lastError;
         for (let attempt = 1; attempt <= retryCount; attempt++) {
             try {
-                logger.info('Generating content with Gemini', { 
+                logger.info('Generating content with Gemini', {
                     promptLength: prompt.length,
-                    attempt 
+                    attempt
                 });
 
                 const result = await this.model.generateContent(prompt);
                 const response = result.response;
                 const text = response.text();
 
-                logger.info('Successfully generated content', { 
+                logger.info('Successfully generated content', {
                     responseLength: text.length,
-                    attempt 
+                    attempt
                 });
 
                 return text;
 
             } catch (error) {
                 lastError = error;
-                logger.warn('Failed to generate content', { 
+                logger.warn('Failed to generate content', {
                     error,
                     attempt,
-                    remainingAttempts: retryCount - attempt 
+                    remainingAttempts: retryCount - attempt
                 });
 
                 // If this is not the last attempt, wait before retrying
@@ -84,9 +87,9 @@ class GeminiService {
         }
 
         // If we've exhausted all retries, log and throw the error
-        logger.error('Failed to generate content after all retry attempts', { 
+        logger.error('Failed to generate content after all retry attempts', {
             error: lastError,
-            totalAttempts: retryCount 
+            totalAttempts: retryCount
         });
         throw lastError;
     }

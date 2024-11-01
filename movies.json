@@ -1,104 +1,92 @@
 [
     {
         "name": "The Greatest of All Time",
-        "languages": "Tamil, Telugu",
+        "languages": [
+            "Tamil",
+            "Telugu"
+        ],
         "title": "The Greatest of All Time",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/the-greatest-of-all-time/ET00401439"
     },
     {
         "name": "Saripodhaa Sanivaaram",
-        "languages": "Telugu",
+        "languages": [
+            "Telugu"
+        ],
         "title": "Saripodhaa Sanivaaram",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/saripodhaa-sanivaaram/ET00388631"
     },
     {
         "name": "Committee Kurrollu",
-        "languages": "Telugu",
+        "languages": [
+            "Telugu"
+        ],
         "title": "Committee Kurrollu",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/committee-kurrollu/ET00401906"
     },
     {
         "name": "Aay (Telugu)",
-        "languages": "Telugu",
+        "languages": [
+            "Telugu"
+        ],
         "title": "Aay (Telugu)",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/aay-telugu/ET00407020"
     },
     {
         "name": "35 (2024)",
-        "languages": "Telugu, Tamil, Malayalam",
+        "languages": [
+            "Telugu",
+            "Tamil",
+            "Malayalam"
+        ],
         "title": "35 (2024)",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/35-2024/ET00403697"
     },
     {
         "name": "Uruku Patela",
-        "languages": "Telugu",
+        "languages": [
+            "Telugu"
+        ],
         "title": "Uruku Patela",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/uruku-patela/ET00409040"
     },
     {
         "name": "3 ",
-        "languages": "Tamil, Telugu",
+        "languages": [
+            "Tamil",
+            "Telugu"
+        ],
         "title": "3 ",
         "links": "https://in.bookmyshow.com/vizianagaram/movies/3/ET00008364"
     },
     {
-        "name": "Mittran Da Challeya Truck Ni",
-        "languages": "Comedy/Drama/Romantic",
-        "title": "Mittran Da Challeya Truck Ni",
-        "links": "https://in.bookmyshow.com/vizianagaram/movies/mittran-da-challeya-truck-ni/ET00414366"
+        "name": "Venom: The Last Dance",
+        "languages": [],
+        "title": "Venom: The Last Dance",
+        "links": "https://in.bookmyshow.com/movies/venom-the-last-dance/ET00383474"
     },
     {
-        "name": "Venom: The Last Dance",
-        "languages": "Action/Adventure/Sci-Fi",
-        "title": "Venom: The Last Dance",
-        "links": "https://in.bookmyshow.com/vizianagaram/movies/venom-the-last-dance/ET00383474"
+        "name": "Mittran Da Challeya Truck Ni",
+        "languages": [],
+        "title": "Mittran Da Challeya Truck Ni",
+        "links": "https://in.bookmyshow.com/movies/mittran-da-challeya-truck-ni/ET00414366"
     },
     {
         "name": "Bhool Bhulaiyaa 3",
-        "languages": "Comedy/Horror",
+        "languages": [],
         "title": "Bhool Bhulaiyaa 3",
         "links": "https://in.bookmyshow.com/movies/bhool-bhulaiyaa-3/ET00353996"
     },
     {
         "name": "Singham Again",
-        "languages": "Action/Drama",
+        "languages": [],
         "title": "Singham Again",
         "links": "https://in.bookmyshow.com/movies/singham-again/ET00354858"
     },
     {
         "name": "Lucky Baskhar",
-        "languages": "Crime/Drama/Thriller",
+        "languages": [],
         "title": "Lucky Baskhar",
         "links": "https://in.bookmyshow.com/movies/lucky-baskhar/ET00386123"
-    },
-    {
-        "name": "Maroon 5 India 2024 - Information Page",
-        "languages": null,
-        "title": "Maroon 5 India 2024 - Information Page",
-        "links": ""
-    },
-    {
-        "name": "Bangr Carnival",
-        "languages": null,
-        "title": "Bangr Carnival",
-        "links": ""
-    },
-    {
-        "name": "Karan Aujla - It Was All A Dream  (Chandigarh)",
-        "languages": null,
-        "title": "Karan Aujla - It Was All A Dream  (Chandigarh)",
-        "links": ""
-    },
-    {
-        "name": "KAAM CHALLA by Madhur Virli",
-        "languages": null,
-        "title": "KAAM CHALLA by Madhur Virli",
-        "links": ""
-    },
-    {
-        "name": "Chandigarh Polo Season",
-        "languages": null,
-        "title": "Chandigarh Polo Season",
-        "links": ""
     }
 ]

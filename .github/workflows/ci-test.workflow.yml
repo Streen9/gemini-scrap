@@ -22,5 +22,5 @@ jobs:
           npx playwright install  # Install Playwright
         shell: bash  # Use 'bash' as the shell
 
-      - name: Run index.js
-        run: node test
+      - name: Run Tests
+        run: npm test

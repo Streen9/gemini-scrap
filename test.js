@@ -1,4 +1,4 @@
-const BookMyShowScraper = require('../scrapers/bookmyshow');
+const BookMyShowScraper = require('./scrapers/bookmyshow');
 
 async function test() {
     const scraper = new BookMyShowScraper('vizianagaram');

@@ -1,7 +1,9 @@
 name: Run index.js every 1 day
 
 on:
-  push:  # Trigger on every push
+  push:
+    branches:
+      - main
   schedule:
     - cron: '0 0 * * *'  
 

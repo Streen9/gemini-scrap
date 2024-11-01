@@ -1,0 +1,26 @@
+name: Run index.js every 10 minutes
+
+on:
+    push:  # Trigger on every push
+    schedule:
+      - cron: '0 0 * * *'  # Run once per day at midnight
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Specify the Node.js version you need
+
+      - name: Install dependencies
+        run: |
+          npm install  # Install your project's dependencies
+          npx install playwright  # Install Playwright
+
+      - name: Run index.js
+        run: node index.js  # Execute the index.js file

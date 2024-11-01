@@ -17,21 +17,6 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules  # Path to cache node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}  # Cache key based on OS and package-lock
-          restore-keys: |
-            ${{ runner.os }}-node-modules-
-
-      - name: Cache Playwright
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/ms-playwright  # Path to cache Playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}  # Cache key based on OS and package-lock
-          restore-keys: |
-            ${{ runner.os }}-playwright-
 
       - name: Install dependencies
         run: |

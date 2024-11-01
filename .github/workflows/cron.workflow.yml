@@ -1,9 +1,9 @@
-name: Run index.js every 10 minutes
+name: Run index.js every 1 day
 
 on:
   push:  # Trigger on every push
   schedule:
-    - cron: '*/10 * * * *'  # Run every 10 minutes
+    - cron: '0 0 * * *'  
 
 jobs:
   run-script:
@@ -15,7 +15,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'  
+          node-version: '20'
+          
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules  # Path to cache node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}  # Cache key based on OS and package-lock
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Cache Playwright
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/ms-playwright  # Path to cache Playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}  # Cache key based on OS and package-lock
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install dependencies
         run: |

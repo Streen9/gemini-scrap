@@ -1,9 +1,9 @@
 name: Run index.js every 10 minutes
 
 on:
-    push:  # Trigger on every push
-    schedule:
-      - cron: '0 0 * * *'  # Run once per day at midnight
+  push:  # Trigger on every push
+  schedule:
+    - cron: '*/10 * * * *'  # Run every 10 minutes
 
 jobs:
   run-script:
@@ -20,8 +20,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install  # Install your project's dependencies
-          npx install playwright  # Install Playwright
-        shell: /bin/bash  # Specify the shell explicitly
+          npx playwright install  # Install Playwright
+        shell: bash  # Use 'bash' as the shell
 
       - name: Run index.js
         run: node index.js  # Execute the index.js file
